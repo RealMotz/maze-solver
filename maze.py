@@ -1,93 +1,47 @@
-from tkinter import Tk, BOTH, Canvas
+from util import Cell, Point
+from time import sleep
 
-
-class Window:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.__root = Tk()
-        self.__root.protocol("WM_DELETE_WINDOW", self.close)
-        self.__root.title = "Maze Solver"
-        self.canvas = Canvas(self.__root)
-        self.canvas.pack()
-        self.running = False
-
-    def redraw(self):
-        # We redraw for reactivity
-        self.__root.update()
-        self.__root.update_idletasks()
-
-    def wait_for_close(self):
-        self.running = True
-        while (self.running):
-            self.redraw()
-
-    def close(self):
-        self.running = False
-
-    def draw_line(self, line, fill_color):
-        line.draw(self.canvas, fill_color)
-
-
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-
-class Line:
-    def __init__(self, p1, p2):
-        self.point1 = p1
-        self.point2 = p2
-
-    def draw(self, canvas, fill_color):
-        canvas.create_line(
-            self.point1.x,
-            self.point1.y,
-            self.point2.x,
-            self.point2.y,
-            fill=fill_color,
-            width=2
-        )
-        canvas.pack()
-
-
-class Cell:
-    def __init__(self, p1, p2, window):
-        self.p1 = p1
-        self.p2 = p2
-        self.has_left_wall = False
-        self.has_right_wall = False
-        self.has_top_wall = False
-        self.has_bottom_wall = False
+class Maze:
+    def __init__(self,
+                 x1,
+                 y1,
+                 num_rows,
+                 num_cols,
+                 cell_size_x,
+                 cell_size_y,
+                 window=None):
+        self.x1 = x1
+        self.y1 = y1
+        self.num_rows = num_rows
+        self.num_cols = num_cols
+        self.cell_size_x = cell_size_x
+        self.cell_size_y = cell_size_y
         self.window = window
+        self.create_cells()
 
-    def draw(self, fill_color):
-        top_right = Point(self.p2.x, self.p1.y)
-        bottom_left = Point(self.p1.x, self.p2.y)
+    def create_cells(self):
+        self.cells = []
+        for row in range(self.num_rows):
+            new_list = []
+            for col in range(self.num_cols):
+                x = self.x1 + col*self.cell_size_x
+                y = self.y1 + row*self.cell_size_y
+                
+                new_cell = Cell(Point(x, y), Point(x+self.
+                                                    cell_size_x, 
+                                                    y+self.cell_size_y), self.window)
+                new_list.append(new_cell)
+                self.draw_cell(new_cell)
+            
+            self.cells.append(new_list)
 
-        top_line = Line(self.p1, top_right)
-        bottom_line = Line(bottom_left, self.p2)
-        left_line = Line(self.p1, bottom_left)
-        right_line = Line(top_right, self.p2)
-        
-        if self.has_top_wall:
-            self.window.draw_line(top_line, fill_color)
-        if self.has_left_wall:
-            self.window.draw_line(left_line, fill_color)
-        if self.has_bottom_wall:
-            self.window.draw_line(bottom_line, fill_color)
-        if self.has_right_wall:
-            self.window.draw_line(right_line, fill_color)
+    def draw_cell(self, cell):
+        cell.draw("black")
+        self.animate()
 
+    def animate(self):
+        if(self.window is None):
+            return
 
-window = Window(400, 600)
-p1 = Point(0, 0)
-p2 = Point(10, 10)
-# window.draw_line(Line(p1, p2), "red")
-c1 = Cell(Point(10, 10), Point(30, 30), window)
-c1.has_bottom_wall = True
-c1.has_top_wall = True
-
-c1.draw("black")
-window.wait_for_close()
+        self.window.redraw()
+        sleep(0.05)
