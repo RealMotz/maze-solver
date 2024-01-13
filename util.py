@@ -1,6 +1,14 @@
 from tkinter import Tk, BOTH, Canvas
 
+
 class Window:
+    """
+    Handles the creation and destruction of a Tkinter window
+
+    Args:
+        width (int): Width of the Tkinter window
+        height (int): Height of the Tkinter window
+    """
     def __init__(self, width, height):
         self.width = width
         self.height = height
@@ -18,7 +26,7 @@ class Window:
 
     def wait_for_close(self):
         self.running = True
-        while (self.running):
+        while self.running:
             self.redraw()
 
     def close(self):
@@ -29,12 +37,26 @@ class Window:
 
 
 class Point:
+    """
+    Represents a 2D point inside a Tkinter window
+
+    Args:
+        x (int): x coordinate inside a Tkinter window
+        y (int): y coordinate inside a Tkinter window
+    """
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
 
 class Line:
+    """
+    Given two points, draws a line between them
+
+    Args:
+        p1 (Point): Top-left point inside a Tkinter window
+        p2 (Point): bottom-right point inside a Tkinter window
+    """
     def __init__(self, p1, p2):
         self.point1 = p1
         self.point2 = p2
@@ -46,12 +68,20 @@ class Line:
             self.point2.x,
             self.point2.y,
             fill=fill_color,
-            width=2
+            width=2,
         )
         canvas.pack(fill=BOTH, expand=1)
 
 
 class Cell:
+    """
+    Represents a cell inside a window
+
+    Args:
+        p1 (Point): Top-left point inside a Tkinter window
+        p2 (Point): bottom-right point inside a Tkinter window
+        window (Window): Optional reference to the window class
+    """
     def __init__(self, p1, p2, window=None):
         self.p1 = p1
         self.p2 = p2
@@ -62,9 +92,9 @@ class Cell:
         self.window = window
 
     def draw(self, fill_color):
-        if(self.window is None):
+        if self.window is None:
             return
-        
+
         top_right = Point(self.p2.x, self.p1.y)
         bottom_left = Point(self.p1.x, self.p2.y)
 
@@ -72,7 +102,7 @@ class Cell:
         bottom_line = Line(bottom_left, self.p2)
         left_line = Line(self.p1, bottom_left)
         right_line = Line(top_right, self.p2)
-        
+
         if self.has_top_wall:
             self.window.draw_line(top_line, fill_color)
         if self.has_left_wall:
@@ -83,12 +113,12 @@ class Cell:
             self.window.draw_line(right_line, fill_color)
 
     def draw_move(self, to_cell, undo=False):
-        x1 = (self.p1.x + self.p2.x)/2
-        y1 = (self.p1.y + self.p2.y)/2
+        x1 = (self.p1.x + self.p2.x) / 2
+        y1 = (self.p1.y + self.p2.y) / 2
         center1 = Point(x1, y1)
 
-        x2 = (to_cell.p1.x + to_cell.p2.x)/2
-        y2 = (to_cell.p1.y + to_cell.p2.y)/2
+        x2 = (to_cell.p1.x + to_cell.p2.x) / 2
+        y2 = (to_cell.p1.y + to_cell.p2.y) / 2
         center2 = Point(x2, y2)
 
         fill_color = "gray" if undo else "red"
