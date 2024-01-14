@@ -90,8 +90,9 @@ class Cell:
         self.has_top_wall = True
         self.has_bottom_wall = True
         self.window = window
+        self.visited = False
 
-    def draw(self, fill_color):
+    def draw(self, fill_color="black"):
         if self.window is None:
             return
 
@@ -103,14 +104,12 @@ class Cell:
         left_line = Line(self.p1, bottom_left)
         right_line = Line(top_right, self.p2)
 
-        if self.has_top_wall:
-            self.window.draw_line(top_line, fill_color)
-        if self.has_left_wall:
-            self.window.draw_line(left_line, fill_color)
-        if self.has_bottom_wall:
-            self.window.draw_line(bottom_line, fill_color)
-        if self.has_right_wall:
-            self.window.draw_line(right_line, fill_color)
+        open_wall_color = "white"
+        
+        self.window.draw_line(top_line, fill_color if self.has_top_wall else open_wall_color)
+        self.window.draw_line(left_line, fill_color if self.has_left_wall else open_wall_color)
+        self.window.draw_line(bottom_line, fill_color if self.has_bottom_wall else open_wall_color)
+        self.window.draw_line(right_line, fill_color if self.has_right_wall else open_wall_color)
 
     def draw_move(self, to_cell, undo=False):
         x1 = (self.p1.x + self.p2.x) / 2
