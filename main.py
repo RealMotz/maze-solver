@@ -30,15 +30,17 @@ def test():
 def main():
     x1 = 50
     y1 = 50
-    rows = 12
-    cols = 16
+    rows = 5
+    cols = 5
     screen_x = 800
     screen_y = 600
     cell_size_x = (screen_x - 2 * x1) / cols
     cell_size_y = (screen_y - 2 * y1) / rows
 
     window = Window(screen_x, screen_y)
-    Maze(x1, y1, rows, cols, cell_size_x, cell_size_y, window)
+    maze = Maze(x1, y1, rows, cols, cell_size_x, cell_size_y, None, window)
+    maze.break_entrance_and_exit()
+    maze.break_walls()
     window.wait_for_close()
 
 
