@@ -30,8 +30,8 @@ def test():
 def main():
     x1 = 50
     y1 = 50
-    rows = 5
-    cols = 5
+    rows = 10
+    cols = 10
     screen_x = 800
     screen_y = 600
     cell_size_x = (screen_x - 2 * x1) / cols
@@ -41,6 +41,8 @@ def main():
     maze = Maze(x1, y1, rows, cols, cell_size_x, cell_size_y, None, window)
     maze.break_entrance_and_exit()
     maze.break_walls()
+    maze.reset_cells_visited()
+    maze.solve()
     window.wait_for_close()
 
 
