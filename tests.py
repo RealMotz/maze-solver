@@ -58,6 +58,21 @@ class Tests(unittest.TestCase):
         for n in range(row):
             for m in range(col):
                 self.assertEqual(maze.cells[n][m].visited, False)
+    
+    def test_maze_can_move(self):
+        row = 10
+        col = 10
+        maze = Maze(0, 0, row, col, 10, 10)
+        maze.break_entrance_and_exit()
+        cell = maze.cells[0][0]
+        can_move_down = maze.can_move(cell, (1,0))
+        can_move_up = maze.can_move(cell, (-1,0))
+        can_move_right = maze.can_move(cell, (0,1))
+        can_move_left = maze.can_move(cell, (0,-1))
+        self.assertEqual(can_move_down, False)
+        self.assertEqual(can_move_up, False)
+        self.assertEqual(can_move_right, False)
+        self.assertEqual(can_move_left, True)
 
 if __name__ == "__main__":
     unittest.main()
